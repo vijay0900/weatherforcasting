@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="./index.css"> 
+</head>
+<body>
+    <div class=" container">
+        <section class="main">
+            <section class="inputs">
+            <input type="text" placeholder="Enter Your City Name.." id="cityinput">
+            <input type="submit" value="Submit" id="add">
+            <button placeholder="Submit" id="add" class="btn"></button>
+        </section>
+    
+
+        <section class="display">
+            <div class="wrapper">
+                <h2 id="cityoutput"></h2>
+                <p id="description"></p>
+                <p id="temp"></p>
+                <p id="wind"></p>
+            </div>
+        </section>
+    
+    </section>
+    
+    </div>
+    <script>
+        var inputvalue = document.querySelector('#cityinput');
+        var btn = document.querySelector('#add');
+        var city = document.querySelector('#cityoutput');
+        var description = document.querySelector('#description');
+        var temp = document.querySelector('#temp');
+        var wind = document.querySelector('#wind');
+        var apik = "bd3ed731803e326475a445074b6f0bdf";
+        
+        function convertion(val) {
+            return (val - 273).toFixed(3);
+        }
+        
+        btn.addEventListener('click', function() {
+            fetch('https://api.openweathermap.org/data/2.5/weather?q=' + inputvalue.value + '&appid=' + apik)
+                .then(res => res.json())
+                .then(data => {
+                    var nameval = data['name'];
+                    var descrip = data['weather'][0]['description']; // Corrected the index
+                    var temperature = data['main']['temp'];
+                    var wndspeed = data['wind']['speed'];
+        
+                    city.innerHTML = `Weather of <span>${nameval}</span>`; // Corrected span closing tag
+                    temp.innerHTML = `Temperature: <span>${convertion(temperature)} C</span>`;
+                    description.innerHTML = `Sky Conditions: <span>${descrip}</span>`;
+                    wind.innerHTML = `Wind Speed: <span>${wndspeed} km/h</span>`;
+
+                })
+                .catch(err => alert('You have enterd wrong city name'));
+        });
+        
+    </script>
+</body>
+</html>
